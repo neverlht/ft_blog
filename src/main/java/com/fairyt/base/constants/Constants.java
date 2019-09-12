@@ -2,6 +2,12 @@ package com.fairyt.base.constants;
 
 public class Constants {
 
+    public static class Current{
+
+        public final static String USER="user";
+
+    }
+
     public static class RequestCode{
         //请求成功
         public final static String SUCCESS = "1";

@@ -1,4 +1,4 @@
-package com.fairyt.base;
+package com.fairyt;
 
 
 import org.springframework.boot.SpringApplication;

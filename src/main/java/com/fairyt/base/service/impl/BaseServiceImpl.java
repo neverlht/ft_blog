@@ -45,6 +45,22 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
     }
 
     @Override
+    public T findOne(T t) {
+        List<T> resultList = this.list(t);
+        if(resultList!=null&&resultList.size()>0)
+            return resultList.get(0);
+        return null;
+    }
+
+    @Override
+    public T findOne(QueryRequest request) {
+        List<T> resultList = this.list(request);
+        if(resultList!=null&&resultList.size()>0)
+            return resultList.get(0);
+        return null;
+    }
+
+    @Override
     public List<T> list() {
         return dao.selectAll();
     }

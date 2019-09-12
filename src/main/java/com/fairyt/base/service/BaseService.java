@@ -13,6 +13,8 @@ public interface BaseService<T extends BaseModel> {
     int delete(Long id);
     T findById(Long id);
     T saveOrUpdateSelective(T t);
+    T findOne(T t);
+    T findOne(QueryRequest request);
     List<T> list();
     List<T> list(T t);
     List<T> list(QueryRequest request);
