@@ -1,9 +1,7 @@
-package com.fairyt.base.controller;
+package com.fairyt.blog.controller;
 
-import com.fairyt.base.model.ArticleModel;
-import com.fairyt.base.model.DemoModel;
-import com.fairyt.base.service.ArticleService;
-import com.fairyt.base.service.DemoService;
+import com.fairyt.blog.model.ArticleModel;
+import com.fairyt.blog.service.ArticleService;
 import com.fairyt.base.utils.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;

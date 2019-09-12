@@ -1,9 +1,11 @@
-package com.fairyt.base.model;
+package com.fairyt.blog.model;
+
+import com.fairyt.base.model.BaseModel;
 
 import javax.persistence.Table;
 
 @Table(name="ft_blog_article")
-public class ArticleModel extends BaseModel{
+public class ArticleModel extends BaseModel {
     //标题
     private String title;
     //分类id

@@ -1,12 +1,11 @@
 package com.fairyt.base.dao.provider;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fairyt.base.model.ArticleModel;
+import com.fairyt.blog.model.ArticleModel;
 import com.fairyt.base.utils.QueryGroup;
 import com.fairyt.base.utils.QueryUtil;
 
 import javax.persistence.Table;
-import java.lang.annotation.Annotation;
 import java.util.*;
 
 public class BaseModelProvider {

@@ -1,12 +1,10 @@
-package com.fairyt.base.service.impl;
+package com.fairyt.blog.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.fairyt.base.dao.ArticleDao;
-import com.fairyt.base.dao.BaseDao;
-import com.fairyt.base.model.ArticleModel;
-import com.fairyt.base.model.DemoModel;
-import com.fairyt.base.service.ArticleService;
-import com.fairyt.base.service.DemoService;
+import com.fairyt.blog.dao.ArticleDao;
+import com.fairyt.base.service.impl.BaseServiceImpl;
+import com.fairyt.blog.model.ArticleModel;
+import com.fairyt.blog.service.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
