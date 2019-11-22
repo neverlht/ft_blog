@@ -9,7 +9,7 @@ public class ArticleModel extends BaseModel {
     //标题
     private String title;
     //分类id
-    private Long cate_id;
+    private Long cateId;
     //点击量
     private Long rate;
     //点赞数
@@ -27,12 +27,12 @@ public class ArticleModel extends BaseModel {
         this.title = title;
     }
 
-    public Long getCate_id() {
-        return cate_id;
+    public Long getCateId() {
+        return cateId;
     }
 
-    public void setCate_id(Long cate_id) {
-        this.cate_id = cate_id;
+    public void setCateId(Long cateId) {
+        this.cateId = cateId;
     }
 
     public Long getRate() {
