@@ -8,8 +8,8 @@ import javax.persistence.Table;
 public class ArticleModel extends BaseModel {
     //标题
     private String title;
-    //分类id
-    private Long cateId;
+    //分类code
+    private String cateCode;
     //点击量
     private Long rate;
     //点赞数
@@ -18,6 +18,16 @@ public class ArticleModel extends BaseModel {
     private String summary;
     //内容
     private String text;
+    //内容md
+    private String textMd;
+
+    public String getTextMd() {
+        return textMd;
+    }
+
+    public void setTextMd(String textMd) {
+        this.textMd = textMd;
+    }
 
     public String getTitle() {
         return title;
@@ -27,12 +37,12 @@ public class ArticleModel extends BaseModel {
         this.title = title;
     }
 
-    public Long getCateId() {
-        return cateId;
+    public String getCateCode() {
+        return cateCode;
     }
 
-    public void setCateId(Long cateId) {
-        this.cateId = cateId;
+    public void setCateCode(String cateCode) {
+        this.cateCode = cateCode;
     }
 
     public Long getRate() {

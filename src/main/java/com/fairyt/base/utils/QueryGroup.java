@@ -52,6 +52,11 @@ public class QueryGroup {
         this.itemsOp = itemsOp;
     }
 
+    public QueryGroup(String op, List<QueryItem> items){
+        this.itemsOp = op;
+        this.items = items;
+    }
+
     public QueryGroup(String op, QueryItem... items){
         this.itemsOp = op;
         for(QueryItem item:items){
@@ -61,6 +66,16 @@ public class QueryGroup {
 
     public static QueryGroup andGroup(QueryItem... items){
         QueryGroup group = new QueryGroup(AND,items);
+        return group;
+    }
+
+    public static QueryGroup andGroup(List<QueryItem> items){
+        QueryGroup group = new QueryGroup(AND,items);
+        return group;
+    }
+
+    public static QueryGroup orGroup(List<QueryItem> items){
+        QueryGroup group = new QueryGroup(OR,items);
         return group;
     }
 

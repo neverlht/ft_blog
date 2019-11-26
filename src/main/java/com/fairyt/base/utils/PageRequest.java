@@ -10,8 +10,11 @@ public class PageRequest extends QueryRequest{
     private Integer pageSize;
 
     public PageRequest(){
-        this.page = 1;
-        this.pageSize=10;
+        this(1,10);
+    }
+
+    public PageRequest(Integer page){
+        this(page,10);
     }
 
     public PageRequest(Integer page, Integer pageSize) {

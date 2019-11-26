@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.fairyt.blog.model.ArticleModel;
 import com.fairyt.base.utils.QueryGroup;
 import com.fairyt.base.utils.QueryUtil;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Table;
 import java.util.*;
@@ -30,7 +31,11 @@ public class BaseModelProvider {
     }
 
     private String getSelectCondition(QueryGroup queryGroup) {
-        String result = " where 1=1 and "+QueryUtil.getGroupCondition(queryGroup);
+        String condition = QueryUtil.getGroupCondition(queryGroup);
+        String result = " where 1=1 ";
+        if(StringUtils.isNotBlank(condition)){
+            result += " and "+condition;
+        }
         return result;
     }
 

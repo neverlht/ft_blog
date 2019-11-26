@@ -41,6 +41,8 @@ public class QueryItem {
         public final static String GT = ">";
         public final static String LT = "<";
         public final static String LIKE = "LIKE";
+        public final static String LIKER = "LIKER";
+        public final static String LIKEL = "LIKEL";
     }
 
     public String getField() {

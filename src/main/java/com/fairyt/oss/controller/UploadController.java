@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.UUID;
 
 
 @RestController
-@RequestMapping("/display/upload")
+@RequestMapping("/api/upload")
 public class UploadController {
     @GetMapping("/signature")
     public Map<String,String> signature(){
@@ -24,7 +25,7 @@ public class UploadController {
         String endpoint = "oss-cn-hangzhou.aliyuncs.com"; // 请填写您的 endpoint。
         String bucket = "fairytale"; // 请填写您的 bucketname 。
         String host = "https://" + bucket + "." + endpoint; // host的格式为 bucketname.endpoint
-        String dir = "blog/"; // 用户上传文件时指定的前缀。
+        String dir = "ft_blog/"; // 用户上传文件时指定的前缀。
 
         OSSClient client = new OSSClient(endpoint, accessId, accessKey);
         try {
@@ -47,6 +48,7 @@ public class UploadController {
             respMap.put("dir", dir);
             respMap.put("host", host);
             respMap.put("expire", String.valueOf(expireEndTime / 1000));
+            respMap.put("fileNameSuffix", UUID.randomUUID().toString());
             // respMap.put("expire", formatISO8601Date(expiration));
             return respMap;
         } catch (Exception e) {

@@ -21,7 +21,18 @@ public class QueryUtil {
         List<QueryGroup> groups = queryGroup.getGroups();
         List<QueryItem> items = queryGroup.getItems();
         for(QueryItem item:items){
-            result.put(item.getId(),item.getValue());
+            Object currentValue = item.getValue();
+//            //处理like
+//            if(item.getOp().equals(QueryItem.Op.LIKE)){
+//                currentValue = "%"+currentValue+"%";
+//            }
+//            if(item.getOp().equals(QueryItem.Op.LIKER)){
+//                currentValue = currentValue+"%";
+//            }
+//            if(item.getOp().equals(QueryItem.Op.LIKEL)){
+//                currentValue = "%"+currentValue;
+//            }
+            result.put(item.getId(),currentValue);
         }
         for(QueryGroup group:groups){
             result.putAll(getQueryParams(group));
@@ -45,10 +56,25 @@ public class QueryUtil {
             if(i>0)
                 result+=" "+queryGroup.getItemsOp()+" ";
             String afterOp = "";
-            if(!item.getOp().equals(QueryItem.Op.IS_NULL)&&!item.getOp().equals(QueryItem.Op.IS_NOT_NULL)){
+            String currentOp = item.getOp();
+            if(!currentOp.equals(QueryItem.Op.IS_NULL)&&!currentOp.equals(QueryItem.Op.IS_NOT_NULL)){
                 afterOp = "#{params."+item.getId()+"}";
             }
-            result += item.getField()+" "+item.getOp()+" "+afterOp;
+            if(currentOp.equals(QueryItem.Op.LIKE)
+                    ||currentOp.equals(QueryItem.Op.LIKER)
+                    ||currentOp.equals(QueryItem.Op.LIKEL)){
+                if(currentOp.equals(QueryItem.Op.LIKE)){
+                    afterOp = "concat(concat('%',#{params."+item.getId()+"}),'%')";
+                }
+                if(currentOp.equals(QueryItem.Op.LIKER)){
+                    afterOp = "#{params."+item.getId()+"}'%'";
+                }
+                if(currentOp.equals(QueryItem.Op.LIKEL)){
+                    afterOp = "'%'#{params."+item.getId()+"}";
+                }
+                currentOp = QueryItem.Op.LIKE;
+            }
+            result += item.getField()+" "+currentOp+" "+afterOp;
         }
         if(StringUtils.isNotBlank(result))
             result+=" ) ";
