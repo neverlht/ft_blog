@@ -60,6 +60,11 @@ public class ArticleController {
         return service.page(pageRequest);
     }
 
+    @GetMapping("/info/{id}")
+    public ArticleModel info(@PathVariable Long id){
+        return service.findById(id);
+    }
+
     /**
      * 保存文章接口
      * @param article
