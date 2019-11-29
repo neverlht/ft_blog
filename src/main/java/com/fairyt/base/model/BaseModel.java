@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 
 @MappedSuperclass
-public class BaseModel implements Serializable{
+public abstract class BaseModel implements Serializable{
     @Id
     @KeySql(useGeneratedKeys = true)
     private Long id;
@@ -48,4 +48,7 @@ public class BaseModel implements Serializable{
         this.dr = dr;
     }
 
+    public String getDefaultQueryItem(){
+        return "name";
+    }
 }

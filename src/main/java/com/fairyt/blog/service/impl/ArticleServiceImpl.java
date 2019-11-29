@@ -18,13 +18,6 @@ public class ArticleServiceImpl extends BaseServiceImpl<ArticleModel> implements
     private ArticleDao dao;
 
     @Override
-    public List<ArticleModel> demo() {
-        JSONObject obj = new JSONObject();
-        obj.put("id","admin");
-        return dao.findDemo(obj);
-    }
-
-    @Override
     public ArticleModel saveArticle(ArticleVo article) {
         //1、处理tags
         this.saveTags(article);

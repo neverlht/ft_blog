@@ -76,4 +76,9 @@ public class ArticleModel extends BaseModel {
     public void setText(String text) {
         this.text = text;
     }
+
+    @Override
+    public String getDefaultQueryItem() {
+        return "title";
+    }
 }

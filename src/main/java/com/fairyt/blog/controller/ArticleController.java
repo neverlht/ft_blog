@@ -13,15 +13,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/article")
-public class ArticleController {
+public class ArticleController extends BaseController<ArticleModel,ArticleService>{
 
     @Autowired
     private ArticleService service;
-
-    @GetMapping("/list")
-    public List<ArticleModel> list(){
-        return service.list();
-    }
 
     @GetMapping("/page")
     public Page<ArticleModel> page(String kw,String cateCode,Integer page,Integer pageSize){
@@ -40,30 +35,10 @@ public class ArticleController {
         return service.page(pageRequest);
     }
 
-    @GetMapping("/request")
-    public List<ArticleModel> request(){
-        QueryRequest queryRequest = new QueryRequest();
-        QueryGroup group = QueryGroup.andGroup(QueryItem.build("id", QueryItem.Op.GT,5),
-                QueryItem.build("id", QueryItem.Op.LT,10),
-                QueryItem.build("summary", QueryItem.Op.IS_NOT_NULL,""));
-        queryRequest.setQueryGroup(group);
-        return service.list(queryRequest);
-    }
-
-    @GetMapping("/requestPage")
-    public Page<ArticleModel> requestPage(){
-        QueryGroup group = QueryGroup.andGroup(QueryItem.build("id", QueryItem.Op.GT,5),
-                QueryItem.build("id", QueryItem.Op.LT,10),
-                QueryItem.build("summary", QueryItem.Op.IS_NOT_NULL,""));
-        PageRequest pageRequest = new PageRequest(2,2);
-        pageRequest.setQueryGroup(group);
-        return service.page(pageRequest);
-    }
-
-    @GetMapping("/info/{id}")
-    public ArticleModel info(@PathVariable Long id){
-        return service.findById(id);
-    }
+//    @GetMapping("/info/{id}")
+//    public ArticleModel info(@PathVariable Long id){
+//        return service.findById(id);
+//    }
 
     /**
      * 保存文章接口
