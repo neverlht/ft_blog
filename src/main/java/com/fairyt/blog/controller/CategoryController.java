@@ -10,18 +10,10 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/category")
-public class CategoryController {
+public class CategoryController extends BaseController<CategoryModel,CategoryService>{
 
     @Autowired
     private CategoryService service;
-
-    @GetMapping("/page")
-    public Page<CategoryModel> page(Integer page, Integer pageSize){
-        page=page==null?1:page;
-        pageSize = pageSize==null?10:pageSize;
-        PageRequest pageRequest = new PageRequest(page,pageSize);
-        return service.page(pageRequest);
-    }
 
     @GetMapping("/del")
     public void del(){
