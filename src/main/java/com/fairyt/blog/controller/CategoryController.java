@@ -20,9 +20,4 @@ public class CategoryController extends BaseController<CategoryModel,CategorySer
 
     }
 
-    @GetMapping("/info/{id}")
-    public CategoryModel info(@PathVariable Long id){
-        return service.findById(id);
-    }
-
 }
