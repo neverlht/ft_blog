@@ -37,4 +37,5 @@ public class PageRequest extends QueryRequest{
     public void setPageSize(Integer pageSize) {
         this.pageSize = pageSize;
     }
+
 }

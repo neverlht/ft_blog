@@ -1,5 +1,8 @@
 package com.fairyt.base.utils;
 
+import com.fairyt.blog.model.ArticleModel;
+import com.fairyt.blog.model.CategoryModel;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -107,22 +110,19 @@ public class QueryGroup {
     }
 
     public static void main(String[] args){
-        QueryItem item1 = new QueryItem("name",QueryItem.Op.EQUAL,"admin");
-        QueryItem item11 = new QueryItem("name",QueryItem.Op.EQUAL,"lht");
-        QueryItem item2 = new QueryItem("age",QueryItem.Op.GT,"13");
-        QueryItem item3 = new QueryItem("sex",QueryItem.Op.IS_NOT_NULL,"");
-        QueryItem item4 = new QueryItem("height",QueryItem.Op.GT,"160");
-        QueryItem item41 = new QueryItem("height",QueryItem.Op.LT,"180");
-        QueryItem itemOr = new QueryItem("both",QueryItem.Op.EQUAL,true);
-//        QueryGroup group = QueryGroup.orGroup(item1,item11)
-//                .and(QueryGroup.singleGroup(item2),QueryGroup.andGroup(item4,item41),QueryGroup.singleGroup(item3))
-//                .or(QueryGroup.singleGroup(itemOr));
 
-        QueryGroup group = QueryGroup.orGroup(item1,item11)
-                .and(QueryGroup.andGroup(item2,item4,item41,item3))
-                .or(QueryGroup.singleGroup(itemOr));
-        System.out.println(QueryUtil.getGroupCondition(group));
-        System.out.println(QueryUtil.getQueryParams(group).toJSONString());
+        QueryRequest request = QueryRequest
+//                .select("a.id,a.title").selectFields("c.name")
+                .select("a.id,a.title,c.name")
+                .from(ArticleModel.class,"a")
+                .join(CategoryModel.class,"c")
+                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.EQUAL,"c.code")));
+        PageRequest pageRequest = QueryRequest
+//                .select("a.id,a.title").selectFields("c.name")
+                .select("a.id,a.title,c.name")
+                .from(ArticleModel.class,"a")
+                .join(CategoryModel.class,"c")
+                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.EQUAL,"c.code"))).page(1,10);
     }
 
 
