@@ -115,14 +115,8 @@ public class QueryGroup {
 //                .select("a.id,a.title").selectFields("c.name")
                 .select("a.id,a.title,c.name")
                 .from(ArticleModel.class,"a")
-                .join(CategoryModel.class,"c")
-                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.EQUAL,"c.code")));
-        PageRequest pageRequest = QueryRequest
-//                .select("a.id,a.title").selectFields("c.name")
-                .select("a.id,a.title,c.name")
-                .from(ArticleModel.class,"a")
-                .join(CategoryModel.class,"c")
-                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.EQUAL,"c.code"))).page(1,10);
+                .join(CategoryModel.class,"c",QueryOn.build(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode")))
+                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.IS_NOT_NULL,"")));
     }
 
 

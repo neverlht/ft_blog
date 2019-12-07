@@ -91,6 +91,22 @@ public class QueryUtil {
         return result;
     }
 
+    /**
+     * 获取on的条件
+     * @param conditions
+     * @return
+     */
+    public static String getOnCondition(List<QueryItem> conditions){
+        String result = "";
+        for(QueryItem item:conditions){
+            // todo
+            result +=item.getField()+" "+item.getOp();
+
+        }
+
+        return "";
+    }
+
     public static Class getCurrentQueryClass(Class c) {
         Type clazz = c.getGenericSuperclass();
         ParameterizedType pt = (ParameterizedType)clazz;

@@ -1,6 +1,7 @@
 package com.fairyt.base.utils;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class QueryRequest{
@@ -77,8 +78,8 @@ public class QueryRequest{
         return this;
     }
 
-    public QueryRequest join(Class mainEntity,String as){
-        this.getQueryEntity().join(mainEntity,as);
+    public QueryRequest join(Class mainEntity,String as,QueryOn on){
+        this.getQueryEntity().join(mainEntity,as,on);
         return this;
     }
 

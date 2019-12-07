@@ -1,9 +1,9 @@
 package com.fairyt.base.dao.provider;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fairyt.base.utils.*;
 import com.fairyt.blog.model.ArticleModel;
-import com.fairyt.base.utils.QueryGroup;
-import com.fairyt.base.utils.QueryUtil;
+import com.fairyt.blog.model.CategoryModel;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.persistence.Table;
@@ -22,9 +22,10 @@ public class BaseModelProvider {
         QueryGroup queryGroup = (QueryGroup) param.get("queryGroup");
         Class modelClass = (Class) param.get("modelClass");
         Set<String> selects = (Set<String>) param.get("selects");
+        QueryEntity queryEntity = (QueryEntity) param.get("queryEntity");
         StringBuilder sb = new StringBuilder();
         sb.append(this.getSelectHeader(selects));
-        sb.append(this.getSelectBody(modelClass));
+        sb.append(this.getSelectBody(modelClass,queryEntity));
         sb.append(this.getSelectCondition(queryGroup));
         String sql = sb.toString();
         return sql;
@@ -39,9 +40,36 @@ public class BaseModelProvider {
         return result;
     }
 
-    private String getSelectBody(Class modelClass) {
-        Table table = (Table) modelClass.getAnnotation(Table.class);
-        String result = " from "+table.name();
+    private String getSelectBody(Class modelClass,QueryEntity queryEntity) {
+        String mainTableName = "";
+        if(queryEntity==null){
+            Table table = (Table) modelClass.getAnnotation(Table.class);
+            mainTableName = table.name();
+        }else{
+            QueryEntityItem  mainEntity  = queryEntity.getMainEntity();
+            List<QueryEntityItem> slaveEntities = queryEntity.getSlaveEntity();
+            Table mainTable = (Table)mainEntity.getEntityClass().getAnnotation(Table.class);
+            mainTableName = mainTable.name();
+            //处理别名
+            String alias = mainEntity.getAlias();
+            if(StringUtils.isNotBlank(alias)){
+                mainTableName += " as "+alias;
+            }
+
+            //处理join条件
+            if(slaveEntities!=null&&slaveEntities.size()>0){
+                for(QueryEntityItem item:slaveEntities){
+                    Table itemTable = (Table)mainEntity.getEntityClass().getAnnotation(Table.class);
+                    String itemName = itemTable.name();
+                    String itemAlias = item.getAlias();
+                    QueryGroup onGroup = item.getOnGroup();
+                    String joinStr = " left join "+itemName+" as "+itemAlias+"";
+                }
+            }
+
+        }
+
+        String result = " from "+mainTableName;
         return result;
     }
 
@@ -64,8 +92,14 @@ public class BaseModelProvider {
 
 
     public static void main(String[] arg){
-        Class clazz = ArticleModel.class;
-        Table table = (Table) clazz.getAnnotation(Table.class);
-        System.out.println(table.name());
+
+        QueryRequest request = QueryRequest
+                .select("a.id,a.title,c.name")
+                .from(ArticleModel.class,"a")
+                .join(CategoryModel.class,"c",QueryGroup.singleGroup(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode")))
+                .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.IS_NOT_NULL,"")));
+        QueryGroup queryGroup = QueryGroup.singleGroup(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode"));
+        String sql = QueryUtil.getGroupCondition(queryGroup);
+        System.out.println(sql);
     }
 }

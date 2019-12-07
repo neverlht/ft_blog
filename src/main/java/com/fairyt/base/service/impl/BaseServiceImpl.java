@@ -75,11 +75,12 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
         QueryGroup queryGroup = request.getQueryGroup();
         Set<String> selects = request.getQueryFields();
         Class modelClass = QueryUtil.getCurrentQueryClass(this.getClass());
+        QueryEntity queryEntity = request.getQueryEntity();
         JSONObject params = QueryUtil.getQueryParams(queryGroup);
 //        Type clazz = this.getClass().getGenericSuperclass();
 //        ParameterizedType pt = (ParameterizedType)clazz;
 //        Class modelClass = (Class) pt.getActualTypeArguments()[0];
-        return dao.findListByRequest(queryGroup,modelClass,selects,params);
+        return dao.findListByRequest(queryGroup,modelClass,selects,queryEntity,params);
     }
 
     @Override

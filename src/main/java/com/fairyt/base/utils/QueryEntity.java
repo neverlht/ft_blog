@@ -23,12 +23,28 @@ public class QueryEntity {
         return entity;
     }
 
-    public QueryEntity join(Class entity,String as){
+    public QueryEntity join(Class entity,String as,QueryOn on){
         if(mainEntity==null){
             throw new BaseError("main entity lost");
         }
-        this.slaveEntity.add(new QueryEntityItem(entity,as));
+        QueryEntityItem currentItem = new QueryEntityItem(entity,as,on);
+        this.slaveEntity.add(currentItem);
         return this;
     }
 
+    public QueryEntityItem getMainEntity() {
+        return mainEntity;
+    }
+
+    public void setMainEntity(QueryEntityItem mainEntity) {
+        this.mainEntity = mainEntity;
+    }
+
+    public List<QueryEntityItem> getSlaveEntity() {
+        return slaveEntity;
+    }
+
+    public void setSlaveEntity(List<QueryEntityItem> slaveEntity) {
+        this.slaveEntity = slaveEntity;
+    }
 }
