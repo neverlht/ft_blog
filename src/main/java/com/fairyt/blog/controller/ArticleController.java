@@ -35,11 +35,6 @@ public class ArticleController extends BaseController<ArticleModel,ArticleServic
         return service.page(pageRequest);
     }
 
-//    @GetMapping("/info/{id}")
-//    public ArticleModel info(@PathVariable Long id){
-//        return service.findById(id);
-//    }
-
     /**
      * 保存文章接口
      * @param article

@@ -11,9 +11,9 @@ public class ArticleModel extends BaseModel {
     //分类code
     private String cateCode;
     //点击量
-    private Long rate;
+    private Long rate=0L;
     //点赞数
-    private Long zan;
+    private Long zan=0L;
     //摘要
     private String summary;
     //内容

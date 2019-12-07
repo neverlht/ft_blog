@@ -53,6 +53,12 @@ public class BaseController<M extends BaseModel,T extends BaseService> {
         return (M) service.saveOrUpdate(model);
     }
 
+
+    @PostMapping("/base/delete")
+    public int delete(Long id){
+        return service.delete(id);
+    }
+
     @GetMapping("/base/list")
     public List<M> list(String kw){
         if(StringUtils.isNotBlank(kw)){
