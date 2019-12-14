@@ -5,6 +5,7 @@ import com.fairyt.base.utils.*;
 import com.fairyt.blog.model.ArticleModel;
 import com.fairyt.blog.model.CategoryModel;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
 import javax.persistence.Table;
 import java.util.*;
@@ -40,8 +41,9 @@ public class BaseModelProvider {
         return result;
     }
 
-    private String getSelectBody(Class modelClass,QueryEntity queryEntity) {
+    private static String getSelectBody(Class modelClass,QueryEntity queryEntity) {
         String mainTableName = "";
+        String joinStr = "";
         if(queryEntity==null){
             Table table = (Table) modelClass.getAnnotation(Table.class);
             mainTableName = table.name();
@@ -59,17 +61,30 @@ public class BaseModelProvider {
             //处理join条件
             if(slaveEntities!=null&&slaveEntities.size()>0){
                 for(QueryEntityItem item:slaveEntities){
-                    Table itemTable = (Table)mainEntity.getEntityClass().getAnnotation(Table.class);
+                    Table itemTable = (Table)item.getEntityClass().getAnnotation(Table.class);
                     String itemName = itemTable.name();
                     String itemAlias = item.getAlias();
-                    QueryGroup onGroup = item.getOnGroup();
-                    String joinStr = " left join "+itemName+" as "+itemAlias+"";
+                    QueryOn on = item.getOnConditions();
+                    List<QueryItem> onConditions = on.getConditions();
+                    if(!CollectionUtils.isEmpty(onConditions)){
+                        StringBuilder onConditionstr = new StringBuilder();
+                        for(int i=0;i<onConditions.size();i++){
+                            if(i>0){
+                                onConditionstr.append(" and ");
+                            }
+                            QueryItem queryItem = onConditions.get(i);
+                            onConditionstr.append(" on ").append(queryItem.getField())
+                            .append(queryItem.getOp()).append(queryItem.getValue());
+                        }
+                        joinStr = " left join "+itemName+" as "+itemAlias+""+onConditionstr.toString();
+                    }
+
                 }
             }
 
         }
 
-        String result = " from "+mainTableName;
+        String result = " from "+mainTableName+joinStr;
         return result;
     }
 
@@ -96,10 +111,10 @@ public class BaseModelProvider {
         QueryRequest request = QueryRequest
                 .select("a.id,a.title,c.name")
                 .from(ArticleModel.class,"a")
-                .join(CategoryModel.class,"c",QueryGroup.singleGroup(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode")))
+                .join(CategoryModel.class,"c",QueryOn.build(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode")))
                 .where(QueryGroup.andGroup(QueryItem.build("a.cateCode",QueryItem.Op.IS_NOT_NULL,"")));
         QueryGroup queryGroup = QueryGroup.singleGroup(QueryItem.build("c.code",QueryItem.Op.EQUAL,"a.cateCode"));
-        String sql = QueryUtil.getGroupCondition(queryGroup);
+        String sql = getSelectBody(null,request.getQueryEntity());
         System.out.println(sql);
     }
 }

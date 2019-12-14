@@ -14,7 +14,7 @@ public class QueryEntityItem {
     private String alias;
 
     //on 条件
-    private List<QueryItem> onConditions;
+    private QueryOn onConditions;
 
     public QueryEntityItem(Class entityClass, String alias) {
         this.entityClass = entityClass;
@@ -24,7 +24,7 @@ public class QueryEntityItem {
     public QueryEntityItem(Class entityClass, String alias,QueryOn on) {
         this.entityClass = entityClass;
         this.alias = alias;
-        this.onConditions = on.getConditions();
+        this.onConditions = on;
     }
 
     public Class getEntityClass() {
@@ -35,8 +35,7 @@ public class QueryEntityItem {
         return alias;
     }
 
-    public List<QueryItem> getOnConditions() {
+    public QueryOn getOnConditions() {
         return onConditions;
     }
-
 }
