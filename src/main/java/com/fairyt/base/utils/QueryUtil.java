@@ -4,10 +4,13 @@ package com.fairyt.base.utils;
 import com.alibaba.fastjson.JSONObject;
 import com.fairyt.base.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.CollectionUtils;
 
+import javax.persistence.Table;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Set;
 
 public class QueryUtil {
 
@@ -112,5 +115,91 @@ public class QueryUtil {
         ParameterizedType pt = (ParameterizedType)clazz;
         Class modelClass = (Class) pt.getActualTypeArguments()[0];
         return modelClass;
+    }
+
+
+    public static String getSql(QueryRequest queryRequest,Class modelClass){
+        QueryEntity queryEntity = queryRequest.getQueryEntity();
+        QueryGroup queryGroup = queryRequest.getQueryGroup();
+        Set<String> selects = queryRequest.getQueryFields();
+        StringBuilder sb = new StringBuilder();
+        sb.append(getSelectHeader(selects));
+        sb.append(getSelectBody(modelClass,queryEntity));
+        sb.append(getSelectCondition(queryGroup));
+        String sql = sb.toString();
+        return sql;
+    }
+
+    public static String getSelectCondition(QueryGroup queryGroup) {
+        String condition = QueryUtil.getGroupCondition(queryGroup);
+        String result = " where 1=1 ";
+        if(StringUtils.isNotBlank(condition)){
+            result += " and "+condition;
+        }
+        return result;
+    }
+
+    public static String getSelectBody(Class modelClass,QueryEntity queryEntity) {
+        String mainTableName = "";
+        String joinStr = "";
+        if(queryEntity==null){
+            Table table = (Table) modelClass.getAnnotation(Table.class);
+            mainTableName = table.name();
+        }else{
+            QueryEntityItem  mainEntity  = queryEntity.getMainEntity();
+            List<QueryEntityItem> slaveEntities = queryEntity.getSlaveEntity();
+            Table mainTable = (Table)mainEntity.getEntityClass().getAnnotation(Table.class);
+            mainTableName = mainTable.name();
+            //处理别名
+            String alias = mainEntity.getAlias();
+            if(StringUtils.isNotBlank(alias)){
+                mainTableName += " as "+alias;
+            }
+
+            //处理join条件
+            if(slaveEntities!=null&&slaveEntities.size()>0){
+                for(QueryEntityItem item:slaveEntities){
+                    Table itemTable = (Table)item.getEntityClass().getAnnotation(Table.class);
+                    String itemName = itemTable.name();
+                    String itemAlias = item.getAlias();
+                    QueryOn on = item.getOnConditions();
+                    List<QueryItem> onConditions = on.getConditions();
+                    if(!CollectionUtils.isEmpty(onConditions)){
+                        StringBuilder onConditionstr = new StringBuilder();
+                        for(int i=0;i<onConditions.size();i++){
+                            if(i>0){
+                                onConditionstr.append(" and ");
+                            }
+                            QueryItem queryItem = onConditions.get(i);
+                            onConditionstr.append(" on ").append(queryItem.getField())
+                                    .append(queryItem.getOp()).append(queryItem.getValue());
+                        }
+                        joinStr = " left join "+itemName+" as "+itemAlias+""+onConditionstr.toString();
+                    }
+
+                }
+            }
+
+        }
+
+        String result = " from "+mainTableName+joinStr;
+        return result;
+    }
+
+    public static String getSelectHeader(Set<String> selects) {
+        String result = "select ";
+        if(selects!=null&&selects.size()>0){
+            String[] sts = new String[selects.size()];
+            selects.toArray(sts);
+            for(int i=0;i<sts.length;i++){
+                if(i>0){
+                    result+=",";
+                }
+                result += " "+sts[i]+" ";
+            }
+        }else{
+            result += " * ";
+        }
+        return result;
     }
 }

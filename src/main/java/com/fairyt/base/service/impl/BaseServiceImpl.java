@@ -73,15 +73,15 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
     @Override
     public List<T> list(QueryRequest request) {
         QueryGroup queryGroup = request.getQueryGroup();
-        Set<String> selects = request.getQueryFields();
         Class modelClass = QueryUtil.getCurrentQueryClass(this.getClass());
-        QueryEntity queryEntity = request.getQueryEntity();
         JSONObject params = QueryUtil.getQueryParams(queryGroup);
 //        Type clazz = this.getClass().getGenericSuperclass();
 //        ParameterizedType pt = (ParameterizedType)clazz;
 //        Class modelClass = (Class) pt.getActualTypeArguments()[0];
-        return dao.findListByRequest(queryGroup,modelClass,selects,queryEntity,params);
+        return dao.findListByRequest(request,modelClass,params);
     }
+
+
 
     @Override
     public Page<T> page(T t, Integer page) {
@@ -106,6 +106,20 @@ public class BaseServiceImpl<T extends BaseModel> implements BaseService<T> {
         PageHelper.startPage(request.getPage(),request.getPageSize(),true);
         List<T> resultList = this.list(request);
         PageInfo<T> pageInfo = new PageInfo<>(resultList);
+        return  new Page<>(pageInfo);
+    }
+
+    @Override
+    public List<JSONObject> listJson(QueryRequest request) {
+        JSONObject params = QueryUtil.getQueryParams(request.getQueryGroup());
+        return dao.findJsonListByRequest(request,params);
+    }
+
+    @Override
+    public Page<JSONObject> pageJson(PageRequest request) {
+        PageHelper.startPage(request.getPage(),request.getPageSize(),true);
+        List<JSONObject> resultList = this.listJson(request);
+        PageInfo<JSONObject> pageInfo = new PageInfo<>(resultList);
         return  new Page<>(pageInfo);
     }
 

@@ -1,6 +1,7 @@
 package com.fairyt.base.service;
 
 
+import com.alibaba.fastjson.JSONObject;
 import com.fairyt.base.model.BaseModel;
 import com.fairyt.base.utils.Page;
 import com.fairyt.base.utils.PageRequest;
@@ -21,4 +22,6 @@ public interface BaseService<T extends BaseModel> {
     Page<T> page(T t, Integer page);
     Page<T> page(T t,Integer page,Integer pageSize);
     Page<T> page(PageRequest request);
+    List<JSONObject> listJson(QueryRequest request);
+    Page<JSONObject> pageJson(PageRequest request);
 }

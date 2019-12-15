@@ -1,6 +1,8 @@
 package com.fairyt.blog.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import com.fairyt.blog.model.ArticleModel;
+import com.fairyt.blog.model.CategoryModel;
 import com.fairyt.blog.service.ArticleService;
 import com.fairyt.base.utils.*;
 import com.fairyt.blog.vo.ArticleVo;
@@ -19,10 +21,9 @@ public class ArticleController extends BaseController<ArticleModel,ArticleServic
     private ArticleService service;
 
     @GetMapping("/page")
-    public Page<ArticleModel> page(String kw,String cateCode,Integer page,Integer pageSize){
+    public Page<JSONObject> page(String kw, String cateCode, Integer page, Integer pageSize){
         page=page==null?1:page;
         pageSize = pageSize==null?10:pageSize;
-        PageRequest pageRequest = new PageRequest(page,pageSize);
         List<QueryItem> queryItems = new ArrayList<>();
         if(StringUtils.isNotBlank(cateCode)){
             queryItems.add(QueryItem.build("cate_code",QueryItem.Op.EQUAL,cateCode));
@@ -31,8 +32,13 @@ public class ArticleController extends BaseController<ArticleModel,ArticleServic
             queryItems.add(QueryItem.build("title",QueryItem.Op.LIKE,kw));
         }
         QueryGroup query = QueryGroup.andGroup(queryItems);
-        pageRequest.setQueryGroup(query);
-        return service.page(pageRequest);
+        QueryRequest request = QueryRequest.select("a.title,c.name as cateName,a.summary,a.zan,a.rate,a.id,c.code")
+                .from(ArticleModel.class,"a")
+                .join(CategoryModel.class,"c",QueryOn.build(
+                        QueryItem.build("a.cate_code",QueryItem.Op.EQUAL,"c.code")))
+                .where(query);
+        PageRequest pageRequest = request.page(page,pageSize);
+        return service.pageJson(pageRequest);
     }
 
     /**

@@ -6,7 +6,7 @@ import com.github.pagehelper.PageInfo;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Page<T extends BaseModel> {
+public class Page<T> {
 
     private Integer page = 1;
 
